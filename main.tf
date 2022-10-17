@@ -6,6 +6,10 @@ variable "ssh_path" {
   type = string
 }
 
+variable "vm_name" {
+  type = string
+}
+
 
 terraform {
   required_providers {
@@ -107,7 +111,7 @@ resource "azurerm_network_interface" "nic-dev-machine" {
 
 
 resource "azurerm_linux_virtual_machine" "vm-DevWork" {
-  name                = "vm-DevWork"
+  name                = var.vm_name
   resource_group_name = azurerm_resource_group.rg-dev-machine.name
   location            = azurerm_resource_group.rg-dev-machine.location
   size                = "Standard_B1s"
