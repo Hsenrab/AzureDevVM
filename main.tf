@@ -10,6 +10,18 @@ variable "vm_name" {
   type = string
 }
 
+variable "shut_down_time" {
+  type = string
+}
+
+variable "timezone" {
+  type = string
+}
+
+variable "email" {
+  type = string
+}
+
 
 terraform {
   required_providers {
@@ -146,5 +158,20 @@ resource "azurerm_linux_virtual_machine" "vm-DevWork" {
       identityfile = var.ssh_path
     })
     interpreter = ["Powershell", "-Command"]
+  }
+}
+
+resource "azurerm_dev_test_global_vm_shutdown_schedule" "vm-shutdown" {
+  virtual_machine_id = azurerm_linux_virtual_machine.vm-DevWork.id
+  location           = azurerm_resource_group.rg-dev-machine.location
+  enabled            = true
+
+  daily_recurrence_time = var.shut_down_time
+  timezone              = var.timezone
+
+  notification_settings {
+    enabled         = true
+    time_in_minutes = "60"
+    email           = var.email
   }
 }
